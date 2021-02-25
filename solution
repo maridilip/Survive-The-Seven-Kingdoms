@@ -1,0 +1,74 @@
+var finalDestination = function(currentPos, directions) {
+    var locales = [
+        ["Deepwood Motte", "Shadow Tower", "Castle Black", "Eastwatch", "Bay of Seals"],
+        ["The Stony Shore", "Torrhen's Square", "Winterfell", "The Dreadfort", "Karhold"],
+        ["Flint's Finger", "Barrowtown", "Moat Cailin", "White Harbour", "Widow's Wat"],
+        ["Pyke", "Seagard", "The Twins", "Sisterton", "The Fingers"],
+        ["The Crag", "Riverrun", "Darry", "The Eyrie", "Gulltown"],
+        ["Castamere", "Acorn Hall", "Harrenhal", "Maidenpool", "Dragonstone"],
+        ["Lannisport", "Stoney Sept", "King's Landing", "Blackwater Bay", "Sharp Point"],
+        ["High Garden", "Bitterbridge", "King's Wood", "Storm's End", "Evenfall"],
+        ["Old Town", "Horn Hill", "Prince's Pass", "Planky Town", "Sunspear"]
+    ];
+    var indexObj;
+    var reached;
+    var len = directions.length;
+    var firstDir;
+    var nextDir;
+    if (len > 2) {
+        var noOfDir = directions.split(' ');
+
+        for (var i = 0; i < noOfDir.length; i++) {
+            indexObj = findIndex(locales, currentPos);
+            reached = getDir(locales, noOfDir[i], indexObj.rowIdx, indexObj.idx);
+            currentPos = reached;
+        }
+
+
+    } else if (len === 2) {
+        indexObj = findIndex(locales, currentPos);
+        reached = getDir(locales, directions, indexObj.rowIdx, indexObj.idx);
+    } else {
+        reached = "The Wall blocks your way"
+    }
+    return reached;
+}
+
+function getDir(locales, directions, rowIdx, idx) {
+    'use strict';
+    directions = directions.split('');
+    var dir = directions[0];
+    var distance = parseInt(directions[1]);
+    var showResult;
+    switch (dir) {
+        case "N":
+            showResult = locales[rowIdx - distance][idx];
+            break;
+        case "S":
+            showResult = locales[rowIdx + distance][idx];
+            break;
+        case "W":
+            showResult = locales[rowIdx][idx - distance];
+            break;
+        case "E":
+            showResult = locales[rowIdx][idx + distance];
+            break;
+    }
+    return showResult;
+};
+
+function findIndex(locales, currentPos) {
+    var temp = { idx: "", rowIdx: "" };
+    var x = locales.forEach(function(item) {
+        item.forEach(function(el) {
+            if (el == currentPos) {
+                temp.idx = item.indexOf(currentPos);
+                temp.rowIdx = locales.indexOf(item);
+            }
+        })
+    });
+    return temp;
+}
+console.log(finalDestination("Winterfell", "S3 W1 S2 W1"));
+console.log(finalDestination("King's Landing", "N5"));
+console.log(finalDestination("King's Landing", "N2 W1"));
